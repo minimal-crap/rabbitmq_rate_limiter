@@ -1,3 +1,7 @@
+"""
+This module defines classes and methods to perform consumption of any specific queue
+belonging to a specific rabbitmq exchange.
+"""
 import pika
 
 from config import settings
@@ -5,13 +9,18 @@ from config import settings
 
 class Consumer:
     """
-    Consumer class to consume the data from the
-    source queue whichever identified
+    Consumer class to consume the data from the source queue whichever identified.
     """
 
     def __init__(self,
                  queue_name=None,
                  exchange_name=None):
+        """
+        This method instantiates the Consumer object.
+
+        :param queue_name: str object; name of queue
+        :param exchange_name:  str object; name of exchange
+        """
         # declaring rabbitmq connection
         self.connection = pika.BlockingConnection(
             pika.ConnectionParameters(**settings.RABBITMQ_CONNECTION_PARAMETER))
@@ -37,10 +46,23 @@ class Consumer:
                                 self.exchange_name)
 
     def callback(self, ch, method, properties, body):
+        """
+        This method acts as callback for rabbitmq Consumer / Worker.
+        :param ch:
+        :param method:
+        :param properties:
+        :param body:
+        :return: None
+        """
         print("[*]message received: {}".format(body))
         self.channel.basic_ack(delivery_tag=method.delivery_tag)
 
     def run(self):
+        """
+        This method binds the callback method with rabbitmq channel and initiates the message
+        consumption.
+        :return: None
+        """
         self.channel.basic_consume(self.callback,
                                    self.queue_name)
         self.channel.start_consuming()
