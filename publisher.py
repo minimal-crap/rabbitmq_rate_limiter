@@ -1,17 +1,30 @@
+"""
+This module defines classes and methods to perform message publishing on specified
+queue belonging to specific rabbitmq exchange
+"""
 import uuid
 import pika
 from config import settings
 
 
 class Publisher:
+    """
+    Publisher class, defines methods to publish message to specific queues.
+    """
     def __init__(self,
-                 channel_name=None,
+                 exchange_name=None,
                  queue_name=None):
+        """
+        This method instantiates the Publisher object.
+
+        :param exchange_name: str object; name of the exchange
+        :param queue_name: str object; name of the queue
+        """
 
         try:
             # getting channel name
-            if channel_name is not None:
-                self.exchange_name = channel_name
+            if exchange_name is not None:
+                self.exchange_name = exchange_name
             else:
                 self.exchange_name = "sample_exchange"
 
@@ -32,6 +45,13 @@ class Publisher:
             print "Publisher::__init__ : {}".format(err.message)
 
     def publish_messages(self, count):
+        """
+        This method pushes number of messages in the target queue, specified by the count
+        parameter.
+
+        :param count: int object; numbes of messages to push
+        :return: None
+        """
         try:
             for i in range(count):
                 call_uuid = str(uuid.uuid4())
