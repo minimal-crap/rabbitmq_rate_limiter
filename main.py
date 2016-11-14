@@ -67,8 +67,8 @@ def build_limiter(queue_name=None,
                      connection=conn)
     source_queue_count = rl.check_source_queue_count()
     filter_queue_count = rl.check_filter_queue_count()
-    print source_queue_count
-    print filter_queue_count
+    print "source queue messages count : {}".format(source_queue_count)
+    print "filter queue messages count : {}".format(filter_queue_count)
     if source_queue_count > 0 and filter_queue_count == 0:
         current_count = rl.message_threshold if source_queue_count > rl.message_threshold else source_queue_count
         print current_count
